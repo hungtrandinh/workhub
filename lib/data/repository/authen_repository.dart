@@ -136,7 +136,7 @@ class AuthenticationRepository {
   bool isWeb = kIsWeb;
   @visibleForTesting
   static const userCacheKey = '__user_cache_key__';
-
+  Stream<User?> get user =>_firebaseAuth.userChanges();
   Future<MyUser> updateCurrentUser(MyUser user) async {
     return await firestore
         .collection("users")
@@ -209,12 +209,12 @@ class AuthenticationRepository {
     }
   }
 
-  Stream<MyUser> get user {
-    return _firebaseAuth.authStateChanges().map((firebaseUser) {
-      final user = firebaseUser == null ? MyUser.empty : firebaseUser.toUser;
-      return user;
-    });
-  }
+  // Stream<MyUser> get user {
+  //   return _firebaseAuth.authStateChanges().map((firebaseUser) {
+  //     final user = firebaseUser == null ? MyUser.empty : firebaseUser.toUser;
+  //     return user;
+  //   });
+  // }
 
   Future<void> logInWithEmailAndPassword({
     required String email,
@@ -229,7 +229,7 @@ class AuthenticationRepository {
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
           await firestore.collection('users').doc(result.user?.uid ?? '').get();
 
-      MyUser? user;
+     MyUser? user;
 
       if (documentSnapshot.exists) {
         user = MyUser.fromJson(documentSnapshot.data() ?? {});

@@ -20,7 +20,6 @@ class SignUpProvider with ChangeNotifier {
 }) async{
     _signUpState = _signUpState.copyWith(signUpStatus: SignUpStatus.submitting);
     notifyListeners();
-
     try{
       await authenticationRepository.signUp(email: email, password: password);
       _signUpState =_signUpState.copyWith(signUpStatus: SignUpStatus.success);

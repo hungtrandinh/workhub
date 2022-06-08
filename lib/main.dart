@@ -1,10 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workhub/data/repository/authen_repository.dart';
+import 'package:workhub/provider/auth/auth_provider.dart';
 import 'package:workhub/provider/signup/signup_provider.dart';
 import 'package:workhub/provider/signin/signin_provider.dart';
+import 'package:workhub/ui/page/home_page.dart';
 import 'package:workhub/ui/page/signIn_page.dart';
 import 'package:workhub/ui/page/signup_page.dart';
 import 'package:workhub/ui/page/splash_page.dart';
@@ -22,15 +24,31 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider(
+        Provider<AuthenticationRepository>(
             create: (context) => AuthenticationRepository(
-                  firebaseAuth: FirebaseAuth.instance,
+                  firebaseAuth: auth.FirebaseAuth.instance,
                 )),
+
         ChangeNotifierProvider<SignUpProvider>(
             create: (context) => SignUpProvider(
                 authenticationRepository:
                     context.read<AuthenticationRepository>())),
-        ChangeNotifierProvider(create: (context) => SignInProvider(authenticationRepository: context.read<AuthenticationRepository>()))
+        ChangeNotifierProvider<SignInProvider>(
+            create: (context) => SignInProvider(
+                authenticationRepository:
+                    context.read<AuthenticationRepository>())),
+        StreamProvider<auth.User?>(
+          create: (context) => context.read<AuthenticationRepository>().user,
+          initialData: null,
+        ),
+        ChangeNotifierProxyProvider<auth.User?, AuthProvider>(
+          create: (context) => AuthProvider(
+              authenticationRepository:
+                  context.read<AuthenticationRepository>()),
+          update: (BuildContext context, auth.User? userStream,
+                  AuthProvider? authProvider) =>
+              authProvider!..update(userStream),
+        )
       ],
       child: MaterialApp(
         title: 'Auth Provider',
@@ -42,6 +60,7 @@ class MyApp extends StatelessWidget {
         routes: {
           SignInPage.routerName: (context) => const SignInPage(),
           SignUpPage.routeName: (context) => const SignUpPage(),
+          HomePage.routeName: (context) => const HomePage()
         },
       ),
     );
