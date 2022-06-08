@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
 
 import '../model/MyUser.dart';
-
 
 class SignUpWithEmailAndPasswordFailure implements Exception {
   // đăng ký tài khoản không thành công
@@ -50,6 +48,7 @@ class LogInWithEmailAndPasswordFailure implements Exception {
 
   const LogInWithEmailAndPasswordFailure(
       [this.messenger = 'Xảy ra 1 ngoại lệ không xác đinh']);
+
   factory LogInWithEmailAndPasswordFailure.fromCode(String code) {
     switch (code) {
       case 'invalid-email':
@@ -79,6 +78,7 @@ class LogInWithGoogleFailure implements Exception {
 
   const LogInWithGoogleFailure(
       [this.messenger = " có một lỗi ngoại lệ xuất hiệnh"]);
+
   factory LogInWithGoogleFailure.fromCode(String code) {
     switch (code) {
       case 'account-exists-with-different-credential':
@@ -127,7 +127,6 @@ class AuthenticationRepository {
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   static Reference storage = FirebaseStorage.instance.ref();
 
-
   AuthenticationRepository(
       {FirebaseAuth? firebaseAuth, GoogleSignIn? googleSignIn})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
@@ -156,18 +155,17 @@ class AuthenticationRepository {
 
   signUp(
       {required String email,
-        required String password,
-        required String name}) async {
+      required String password,
+      }) async {
     try {
       UserCredential result =
-      await _firebaseAuth.createUserWithEmailAndPassword(
+          await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       MyUser? user = MyUser(
         email: email,
-        name: name,
         id: result.user?.uid ?? '',
       );
       createNewUser(user);
@@ -229,7 +227,7 @@ class AuthenticationRepository {
       );
 
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-      await firestore.collection('users').doc(result.user?.uid ?? '').get();
+          await firestore.collection('users').doc(result.user?.uid ?? '').get();
 
       MyUser? user;
 
@@ -244,7 +242,8 @@ class AuthenticationRepository {
   }
 
   final Stream<QuerySnapshot> _usersStream =
-  FirebaseFirestore.instance.collection('users').snapshots();
+      FirebaseFirestore.instance.collection('users').snapshots();
+
   String getuid() {
     print(_usersStream.toString());
     return _usersStream.toString();
@@ -276,6 +275,7 @@ class Uid {
   final String id;
 
   Uid({required this.id});
+
   static Uid fromJson(Map<String, dynamic> parsedJson) {
     return Uid(
       id: parsedJson['id'] ?? parsedJson['userID'] ?? '',
