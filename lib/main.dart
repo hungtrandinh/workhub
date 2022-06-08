@@ -1,6 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:workhub/data/repository/LoginRepository.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  AuthenticationRepository().signUp(email: "hungtran@gmail.com", password: "H123456789", name: "hungtrann");
   runApp(const MyApp());
 }
 
