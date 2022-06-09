@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workhub/provider/signup/signup_state.dart';
-import 'package:workhub/ui/page/signIn_page.dart';
-
 import '../../data/model/custom_error.dart';
 import '../../provider/signup/signup_provider.dart';
-import '../../provider/signin/signin_provider.dart';
 import '../../utils/error_dialog.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -21,20 +18,21 @@ class SignUpPage extends StatefulWidget {
 class SignUpPageState extends State<SignUpPage> {
   TextEditingController password = TextEditingController();
   TextEditingController email = TextEditingController();
-  void _submit() async {
 
+  void _submit() async {
     try {
       await context
           .read<SignUpProvider>()
-          .signUp( email: email.text, password:password.text);
+          .signUp(email: email.text, password: password.text);
     } on CustomError catch (e) {
       errorDialog(context, e);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final signUpState = context.watch<SignUpProvider>().state;
-    return  Scaffold(
+    return Scaffold(
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -59,21 +57,12 @@ class SignUpPageState extends State<SignUpPage> {
                     labelText: "Name",
                     prefixIcon: Icon(Icons.account_box),
                   ),
-                  validator: (String? value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return "Name required";
-                    }
-                    if (value.trim().length < 2) {
-                      return "Name must be at least 2 characters long";
-                    }
-                    return null;
-                  },
-
                 ),
                 const SizedBox(
                   height: 20.0,
                 ),
                 TextFormField(
+                  controller: email,
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
                   decoration: const InputDecoration(
@@ -82,9 +71,6 @@ class SignUpPageState extends State<SignUpPage> {
                     labelText: "Email",
                     prefixIcon: Icon(Icons.email),
                   ),
-
-
-
                 ),
                 const SizedBox(height: 20.0),
                 TextFormField(
@@ -96,32 +82,20 @@ class SignUpPageState extends State<SignUpPage> {
                     labelText: "Password",
                     prefixIcon: Icon(Icons.lock),
                   ),
-                  validator: (String? value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return "Password required";
-                    }
-                    if (value.trim().length < 6) {
-                      return "Password must be at least characters long";
-                    }
-                    return null;
-                  },
-
                 ),
                 const SizedBox(height: 20.0),
                 TextFormField(
                   obscureText: true,
-                  decoration:const  InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     filled: true,
                     labelText: "Confirm Password",
                     prefixIcon: Icon(Icons.lock),
                   ),
-
                 ),
                 const SizedBox(height: 20.0),
                 ElevatedButton(
-                  onPressed:
-                  signUpState.signUpStatus== SignUpStatus.submitting
+                  onPressed: signUpState.signUpStatus == SignUpStatus.submitting
                       ? null
                       : _submit,
                   style: ElevatedButton.styleFrom(
@@ -132,19 +106,18 @@ class SignUpPageState extends State<SignUpPage> {
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                   ),
                   child: Text(
-                    signUpState.signUpStatus== SignUpStatus.submitting
+                    signUpState.signUpStatus == SignUpStatus.submitting
                         ? "Loading..."
                         : "Sign up",
                   ),
                 ),
                 const SizedBox(height: 10.0),
                 TextButton(
-                  onPressed:
-                  signUpState.signUpStatus== SignUpStatus.submitting
+                  onPressed: signUpState.signUpStatus == SignUpStatus.submitting
                       ? null
                       : () {
-                    Navigator.pop(context);
-                  },
+                          Navigator.pop(context);
+                        },
                   style: TextButton.styleFrom(
                     textStyle: const TextStyle(
                       fontSize: 20.0,
@@ -153,7 +126,7 @@ class SignUpPageState extends State<SignUpPage> {
                   ),
                   child: const Text("Already a member? Sign in!"),
                 )
-              ].reversed.toList(), // 모든 element들이 keyboard 위로 표시되게 하기 위함.
+              ].reversed.toList(),
             ),
           ),
         ),

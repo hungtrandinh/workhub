@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:workhub/data/model/MyUser.dart';
+import 'package:workhub/data/model/my_user.dart';
 
 enum AuthStatus {
   unknown,
@@ -23,11 +23,11 @@ class AuthState extends Equatable {
     AuthStatus? authStatus,
   }) {
     return AuthState(
-      user:user?? this.user ,
+      user: user ?? this.user,
       authStatus: authStatus ?? this.authStatus,
     );
   }
 
   @override
-  List<Object?> get props => [authStatus,user];
+  List<Object?> get props => [authStatus, user];
 }

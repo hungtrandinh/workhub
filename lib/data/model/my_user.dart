@@ -43,7 +43,7 @@ class MyUser {
       email: parsedJson['email'] ?? '',
       name: parsedJson['firstName'] ?? '',
       id: parsedJson['id'] ?? parsedJson['userID'] ?? '',
-      profilePictureURL: parsedJson['profilePictureURL'] ?? null,
+      profilePictureURL: parsedJson['profilePictureURL'],
     );
   }
 

@@ -23,12 +23,14 @@ class SignUpProvider with ChangeNotifier {
     try{
       await authenticationRepository.signUp(email: email, password: password);
       _signUpState =_signUpState.copyWith(signUpStatus: SignUpStatus.success);
+      notifyListeners();
     }on CustomError catch(e){
       _signUpState =_signUpState.copyWith(
         signUpStatus: SignUpStatus.error,
         customError: e
 
       );
+      notifyListeners();
 
     }
   }

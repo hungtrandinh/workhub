@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workhub/data/repository/authen_repository.dart';
+import 'package:workhub/data/repository/post_reponsitory.dart';
 import 'package:workhub/provider/auth/auth_provider.dart';
 import 'package:workhub/provider/signup/signup_provider.dart';
 import 'package:workhub/provider/signin/signin_provider.dart';
@@ -14,6 +15,7 @@ import 'package:workhub/ui/page/splash_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  PostRepository().getPost();
   runApp(const MyApp());
 }
 

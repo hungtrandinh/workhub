@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
 
-import '../model/MyUser.dart';
+import '../model/my_user.dart';
+import '../model/custom_error.dart';
 
 class SignUpWithEmailAndPasswordFailure implements Exception {
   // đăng ký tài khoản không thành công
@@ -177,9 +178,17 @@ class AuthenticationRepository {
         return 'Couldn\'t sign up for firebase, Please try again.';
       }
     } on FirebaseAuthException catch (e) {
-      throw SignUpWithEmailAndPasswordFailure(e.code);
-    } catch (_) {
-      throw const SignUpWithEmailAndPasswordFailure();
+      throw CustomError(
+        code: e.code,
+        massage: e.message!,
+        plugin: e.plugin,
+      );
+    } catch (e) {
+      throw CustomError(
+        code: "Exception",
+        massage: e.toString(),
+        plugin: "flutter_error/server_error",
+      );
     }
   }
 
@@ -235,9 +244,17 @@ class AuthenticationRepository {
         user = MyUser.fromJson(documentSnapshot.data() ?? {});
       }
     } on FirebaseAuthException catch (e) {
-      throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
-    } catch (_) {
-      throw const LogInWithEmailAndPasswordFailure();
+      throw CustomError(
+        code: e.code,
+        massage: e.message!,
+        plugin: e.plugin,
+      );
+    } catch (e) {
+    throw CustomError(
+          code: "Exception",
+          massage: e.toString(),
+          plugin: "flutter_error/server_error",
+    );
     }
   }
 
