@@ -32,13 +32,13 @@ class ListBookState extends State<ListBook> with TickerProviderStateMixin {
               Tab(
                 child: Text(
                   "ル過ぎ",
-                  style: TextStyleApp.txtTabbar,
+                  style: AppTextStyle.txtTabbar,
                 ),
               ),
               Tab(
                 child: Text(
                   "ル過ぎ",
-                  style: TextStyleApp.txtTabbar,
+                  style: AppTextStyle.txtTabbar,
                 ),
               ),
             ]),
