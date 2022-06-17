@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../data/model/custom_error.dart';
-
+import '../../data/model/custom_error.dart';
 void errorDialog(BuildContext context, CustomError e) {
   if (Platform.isIOS) {
     showCupertinoDialog(

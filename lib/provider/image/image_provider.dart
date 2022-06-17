@@ -13,7 +13,6 @@ class ImageApiProvider with ChangeNotifier{
 });
   Future<void> getImage() async{
      _state = _state.copyWith(imageStatus: ImageStatus.loading);
-     notifyListeners();
      
      try{
         final List<ImageApi>? imageApi = await imageRepository.getImage();

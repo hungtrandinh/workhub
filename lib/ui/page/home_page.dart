@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:workhub/ui/page/profile_page.dart';
+import 'package:workhub/value/strings.dart';
 import '../../common/animated/custom_page_route.dart';
-import '../../provider/tinderprovider/card_tinder_provider.dart';
+import '../../provider/tinder/card_tinder_provider.dart';
+import '../../provider/tinder/card_tinder_state.dart';
 import '../../value/textstyle_app.dart';
 import '../widgets/tinder_card.dart';
 
@@ -17,12 +18,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  late TabController _tabController;
-
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this, initialIndex: 0);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -40,7 +43,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     width: 20,
                   ),
                   Text(
-                    "Tinder",
+                    Strings.nameApp,
                     style: AppTextStyle.appTitle,
                   ),
                 ],
@@ -89,13 +92,45 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget buildCard() {
+    final state = context.watch<CardProvider>().cardState;
+    if (state.cardState1 == CardStatus1.initial) {
+      return Container();
+    } else if (state.cardState1 == CardStatus1.loading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if (state.cardState1 == CardStatus1.errors) {
+      return Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              "assets/images/error.png",
+              width: 75,
+              height: 75,
+              fit: BoxFit.cover,
+            ),
+            const SizedBox(width: 20.0),
+            const Text(
+              "Ooops!\nTry againg",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20.0,
+                color: Colors.red,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
     final provider = context.watch<CardProvider>();
-    final images = provider.urlImages;
+    // final images = provider.urlImages;
     final status = provider.getStatus();
     final isLike = status == CardStatus.like;
     final isDislike = status == CardStatus.dislike;
     final isSuperLike = status == CardStatus.superLike;
-    return images.isEmpty
+    return state.post!.isEmpty
         ? Center(
             child: TextButton(
               onPressed: () {
@@ -109,10 +144,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               Expanded(
                 flex: 8,
                 child: Stack(
-                  children: images
+                  children: state.post!
                       .map((urlImages) => TinderCard(
-                          urlImages: urlImages,
-                          isFont: images.last == urlImages))
+                          urlImages: urlImages.image,
+                          isFont: state.post!.last == urlImages))
                       .toList(),
                 ),
               ),

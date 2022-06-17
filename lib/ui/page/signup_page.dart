@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workhub/provider/signup/signup_state.dart';
+import '../../common/utils/error_dialog.dart';
 import '../../data/model/custom_error.dart';
 import '../../provider/signup/signup_provider.dart';
-import '../../utils/error_dialog.dart';
 import '../../value/app_colors.dart';
 
 class SignUpPage extends StatefulWidget {

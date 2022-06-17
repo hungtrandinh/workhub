@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
 
-import '../model/my_user.dart';
 import '../model/custom_error.dart';
+import '../model/my_user.dart';
 
 class SignUpWithEmailAndPasswordFailure implements Exception {
   // đăng ký tài khoản không thành công
@@ -218,12 +218,6 @@ class AuthenticationRepository {
     }
   }
 
-  // Stream<MyUser> get user {
-  //   return _firebaseAuth.authStateChanges().map((firebaseUser) {
-  //     final user = firebaseUser == null ? MyUser.empty : firebaseUser.toUser;
-  //     return user;
-  //   });
-  // }
 
   Future<void> logInWithEmailAndPassword({
     required String email,

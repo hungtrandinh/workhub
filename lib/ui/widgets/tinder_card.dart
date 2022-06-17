@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../provider/tinderprovider/card_tinder_provider.dart';
+import '../../provider/tinder/card_tinder_provider.dart';
 
 
 class TinderCard extends StatefulWidget {

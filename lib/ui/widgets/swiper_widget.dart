@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workhub/provider/image/image_provider.dart';
 import 'package:workhub/provider/image/image_state.dart';
+import 'package:workhub/value/strings.dart';
 
 class SwiperCustoms extends StatefulWidget {
   const SwiperCustoms({Key? key}) : super(key: key);
@@ -31,7 +32,7 @@ class SwiperState extends State<SwiperCustoms> {
       return const Center(
         child: CircularProgressIndicator(),
       );
-    } else if (imageStates.imageStatus == ImageStatus.initial) {
+    } else if (imageStates.imageStatus == ImageStatus.loading) {
       return const Center(
         child: Text("no data"),
       );
@@ -39,12 +40,9 @@ class SwiperState extends State<SwiperCustoms> {
       return Swiper(
         itemBuilder: (BuildContext context, int index) {
           final image = imageStates.imageApi![index];
-          return Image.network(
-            image.download_url,
-            fit: BoxFit.fill,
-          );
+          return Text(Strings.nameApp);
         },
-        layout: SwiperLayout.TINDER,
+        layout: SwiperLayout.DEFAULT,
         itemCount: imageStates.imageApi!.length,
         viewportFraction: 0.8,
         scale: 0.9,

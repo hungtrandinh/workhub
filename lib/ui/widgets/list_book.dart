@@ -47,8 +47,8 @@ class ListBookState extends State<ListBook> with TickerProviderStateMixin {
           controller: _tabController,
           children: <Widget>[
             Column(
-              children: [
-                const SizedBox(
+              children: const [
+                SizedBox(
                   height: 20,
                 ),
                 SizedBox(

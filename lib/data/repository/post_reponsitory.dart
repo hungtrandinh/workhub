@@ -14,8 +14,7 @@ class PostRepository {
       : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance,
         _firebaseStorage = firebaseStorage ?? FirebaseStorage.instance;
 
-  Stream<List<Post>> getPost(){
-    return _firebaseFirestore.collection("post").snapshots().map((event) => event.docs.map((e) => Post.fromJson(e)).toList());
-
+  Future<List<Post>> getPost() async {
+  return _firebaseFirestore.collection("post").get().then((value) =>value.docs.map((e) =>Post.fromJson(e)).toList().reversed.toList());
   }
 }

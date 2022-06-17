@@ -2,23 +2,20 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:workhub/data/repository/authen_repository.dart';
-import 'package:workhub/data/repository/image_reponsitory.dart';
-import 'package:workhub/data/repository/post_reponsitory.dart';
 import 'package:workhub/provider/auth/auth_provider.dart';
+import 'package:workhub/provider/drawing/drawing_provider.dart';
 import 'package:workhub/provider/image/image_provider.dart';
-import 'package:workhub/provider/signup/signup_provider.dart';
 import 'package:workhub/provider/signin/signin_provider.dart';
-import 'package:workhub/provider/tinderprovider/card_tinder_provider.dart';
-import 'package:workhub/ui/page/home_page.dart';
-import 'package:workhub/ui/page/signIn_page.dart';
-import 'package:workhub/ui/page/signup_page.dart';
-import 'package:workhub/ui/page/splash_page.dart';
+import 'package:workhub/provider/signup/signup_provider.dart';
+import 'package:workhub/provider/tinder/card_tinder_provider.dart';
+import 'package:workhub/ui/page/drawing_page.dart';
+
+import 'data/repository/export_reponsitory.dart';
+import 'ui/page/export_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  PostRepository().getPost();
   runApp(const MyApp());
 }
 
@@ -29,6 +26,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider<PostRepository>(
+          create: (context) =>PostRepository(),
+        ),
         Provider<ImageRepository>(
           create: (context) =>ImageRepository(),
         ),
@@ -36,7 +36,10 @@ class MyApp extends StatelessWidget {
             create: (context) => AuthenticationRepository(
                   firebaseAuth: auth.FirebaseAuth.instance,
                 )),
-        ChangeNotifierProvider(create: (context)=>CardProvider()),
+        ChangeNotifierProvider(create: (context)=>DrawingProvider()),
+        ChangeNotifierProvider(create: (context)=>CardProvider(
+          postRepository: context.read<PostRepository>()
+        )),
         ChangeNotifierProvider<ImageApiProvider>(create: (context)=>ImageApiProvider(
             imageRepository: context.read<ImageRepository>())),
         ChangeNotifierProvider<SignUpProvider>(
@@ -70,7 +73,7 @@ class MyApp extends StatelessWidget {
         routes: {
           SignInPage.routerName: (context) => const SignInPage(),
           SignUpPage.routeName: (context) => const SignUpPage(),
-          HomePage.routeName: (context) => const HomePage()
+          DrawingPage.routeName: (context) => const DrawingPage()
         },
       ),
     );

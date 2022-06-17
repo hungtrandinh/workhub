@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workhub/provider/auth/auth_provider.dart';
+import 'package:workhub/ui/page/drawing_page.dart';
 import 'package:workhub/ui/page/signIn_page.dart';
 import '../../provider/auth/auth_state.dart';
 import 'home_page.dart';
@@ -32,7 +33,7 @@ class _SplashPageState extends State<SplashPage> {
 
     if (authState.authStatus == AuthStatus.authenticated) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushNamed(context, HomePage.routeName);
+        Navigator.pushNamed(context,DrawingPage.routeName);
       });
     } else if (authState.authStatus == AuthStatus.unauthenticated) {
       WidgetsBinding.instance.addPostFrameCallback((_) {

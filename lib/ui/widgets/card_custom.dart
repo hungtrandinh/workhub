@@ -8,8 +8,8 @@ class CardPainter extends CustomPainter{
       ..style =PaintingStyle.fill
       ..strokeWidth= 8.0;
     final path = Path();
-    path.moveTo(0, size.height /2);
-    path.quadraticBezierTo(size.width /2,size.height/1.4 ,size.width,size.height/2);
+    path.moveTo(0, size.height /1.9);
+    path.quadraticBezierTo(size.width /2,size.height/1.5 ,size.width,size.height/1.9);
     path.lineTo(size.width, 0);
     path.lineTo(0, 0);
     canvas.drawPath(path, paint);

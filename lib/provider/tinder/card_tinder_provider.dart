@@ -1,8 +1,25 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:workhub/data/repository/export_reponsitory.dart';
+
+import '../tinder/card_tinder_state.dart';
+
+
+
+
 
 enum CardStatus { like, dislike, superLike }
 
 class CardProvider extends ChangeNotifier {
+  CardState _cardState = CardState.initial();
+
+  CardState get cardState => _cardState;
+  final PostRepository postRepository;
+
+  CardProvider({required this.postRepository}) {
+    resetUsers();
+  }
+
   List<String> _urlImages = [];
   bool _isDragging = false;
 
@@ -18,13 +35,23 @@ class CardProvider extends ChangeNotifier {
 
   List<String> get urlImages => _urlImages;
 
+  Future<void> getPost() async {
+    _cardState = _cardState.copyWith(cardState1: CardStatus1.loading);
+    try {
+      final dataPost = await postRepository.getPost();
+      _cardState =
+          _cardState.copyWith(cardState1: CardStatus1.success, post: dataPost);
+      notifyListeners();
+    } catch (_) {
+      if (kDebugMode) {
+        print("$_");
+      }
+    }
+  }
+
   void setScreenSize(Size screenSize) {
     _screenSize = screenSize;
     notifyListeners();
-  }
-
-  CardProvider() {
-    resetUsers();
   }
 
   void startPosition(DragStartDetails details) {
@@ -68,12 +95,7 @@ class CardProvider extends ChangeNotifier {
 
   void resetUsers() {
     {
-      _urlImages = <String>[
-        "https://www.vietnamairlinesgiare.vn/wp-content/uploads/2015/12/ve-may-bay-di-london-1-28-12-2015.png",
-        "https://s1.media.ngoisao.vn/resize_580/news/2021/05/13/kim-ngan6-ngoisaovn-w660-h824.jpg",
-        "https://anhdep123.com/wp-content/uploads/2021/02/hinh-nen-gai-xinh-full-hd-cho-dien-thoai.jpg",
-        "https://upload.wikimedia.org/wikipedia/commons/0/06/Tr%C3%BAc_Anh_%E2%80%93_M%E1%BA%AFt_bi%E1%BA%BFc_BTS_%282%29.png",
-      ].reversed.toList();
+      getPost();
       notifyListeners();
     }
   }
@@ -87,13 +109,13 @@ class CardProvider extends ChangeNotifier {
     final x = position.dx;
     final y = position.dy;
     const delta = 100;
-    final forceSuperLike = x.abs() <20;
+    final forceSuperLike = x.abs() < 20;
 
     if (x >= delta) {
       return CardStatus.like;
-    }else if(x <= -delta){
+    } else if (x <= -delta) {
       return CardStatus.dislike;
-    }else if(y<= -delta /2 && forceSuperLike){
+    } else if (y <= -delta / 2 && forceSuperLike) {
       return CardStatus.superLike;
     }
     return null;
@@ -107,22 +129,22 @@ class CardProvider extends ChangeNotifier {
   }
 
   void dislike() {
-    _angle =-20;
-    _position -= Offset(2* _screenSize.width,0);
+    _angle = -20;
+    _position -= Offset(2 * _screenSize.width, 0);
     _nextCard();
     notifyListeners();
   }
 
   void supperLike() {
-    _angle =0;
-    _position -=Offset(0,_screenSize.height);
+    _angle = 0;
+    _position -= Offset(0, _screenSize.height);
     _nextCard();
   }
 
   Future _nextCard() async {
-    if (_urlImages.isEmpty) return;
+    if (_cardState.post!.isEmpty) return;
     await Future.delayed(const Duration(milliseconds: 200));
-    _urlImages.removeLast();
+    _cardState.post!.removeLast();
     resetPosition();
   }
 }
